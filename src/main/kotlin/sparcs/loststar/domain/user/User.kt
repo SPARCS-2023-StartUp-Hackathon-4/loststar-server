@@ -12,6 +12,7 @@ class User(
     var password: String,
     var nickname: String,
     var address: String,
+    var profile : String,
     var role: Role = Role.USER,
     var anchorStar : Int = 0,
     var starPiece : Int = 0,
@@ -19,6 +20,20 @@ class User(
     var speakerItem : Int = 0,
     var fcmToken : String
 ) {
+    fun toUserDto(): UserDto {
+        return UserDto(
+            id = id,
+            email = email,
+            nickname = nickname,
+            address = address,
+            profile = profile,
+            fcmToken = fcmToken,
+            anchorStar = anchorStar,
+            starPiece = starPiece,
+            boostItem = boostItem,
+            speakerItem = speakerItem
+        )
+    }
 
     enum class Role {
         USER, ADMIN
