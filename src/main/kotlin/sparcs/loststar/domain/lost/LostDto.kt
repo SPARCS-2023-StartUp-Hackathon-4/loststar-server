@@ -1,13 +1,15 @@
 package sparcs.loststar.domain.lost
 
 import sparcs.loststar.common.Category
+import sparcs.loststar.domain.user.User
 
 data class LostRequest(
     val title: String,
     val category: Category,
     val location: String, // 분실지역
     val locationDetail: String, // 상세주소
-    val lostAt: String, // 분실일시
+    val lostDate: String, // 분실날짜
+    val lostTime: String, // 분실시간
     val link: String, // 오카방 링크
     val image: String,
     val description: String,
@@ -15,17 +17,19 @@ data class LostRequest(
     val useBoost: Boolean, // 궤도 진입 추진기 사용 여부
     val useSpeaker: Boolean // 확성기 사용 여부
 ) {
-    fun toEntity() = Lost(
+    fun toEntity(user: User) = Lost(
         title = title,
         category = category,
         location = location,
         locationDetail = locationDetail,
-        lostAt = lostAt,
+        lostDate = lostDate,
+        lostTime = lostTime,
         link = link,
         image = image,
         description = description,
         reward = reward,
-        boost = useBoost
+        boost = useBoost,
+        user = user,
     )
 }
 
@@ -35,7 +39,8 @@ data class LostResponse(
     val category: Category,
     val location: String, // 분실지역
     val locationDetail: String, // 상세주소
-    val lostAt: String, // 분실일시
+    val lostDate: String, // 분실날짜
+    val lostTime: String, // 분실시간
     val link: String, // 오카방 링크
     val image: String,
     val description: String,
@@ -48,7 +53,8 @@ data class LostResponse(
         category = lost.category,
         location = lost.location,
         locationDetail = lost.locationDetail,
-        lostAt = lost.lostAt,
+        lostDate = lost.lostDate,
+        lostTime = lost.lostTime,
         link = lost.link,
         image = lost.image,
         description = lost.description,
@@ -71,7 +77,7 @@ data class LostCardResponse(
         image = lost.image,
         title = lost.title,
         location = lost.location,
-        lostAt = lost.lostAt,
+        lostAt = lost.lostDate,
         reward = lost.reward
     )
 }

@@ -19,7 +19,8 @@ class Lost(
 
     var location: String, // 분실지역
     var locationDetail: String, // 상세주소
-    var lostAt: String, // 분실일시
+    var lostDate: String, // 분실날짜
+    var lostTime: String, // 분실시간
 
     var link: String, // 오카방 링크
     var image: String,
@@ -51,7 +52,8 @@ class Lost(
         category = lostRequest.category
         location = lostRequest.location
         locationDetail = lostRequest.locationDetail
-        lostAt = lostRequest.lostAt
+        lostDate = lostRequest.lostDate
+        lostTime = lostRequest.lostTime
         link = lostRequest.link
         image = lostRequest.image
         description = lostRequest.description

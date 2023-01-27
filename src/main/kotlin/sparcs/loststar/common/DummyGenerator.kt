@@ -4,10 +4,11 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import sparcs.loststar.domain.lost.LostRequest
 import sparcs.loststar.domain.lost.LostService
-import sparcs.loststar.domain.user.SignRequest
+import sparcs.loststar.domain.user.User
 import sparcs.loststar.domain.user.UserRepository
 import sparcs.loststar.domain.user.UserService
 import javax.annotation.PostConstruct
+import kotlin.random.Random
 
 @Component
 @Transactional
@@ -19,22 +20,32 @@ class DummyGenerator(
 
     @PostConstruct
     fun init() {
-        userService.signUp(SignRequest("admin", "address", ""))
-        repeat(13) {
+        val admin = userRepository.save(User(
+            email = "admin",
+            password = "1234"
+        ))
+        val categories = mutableListOf(
+            Category.가방,
+            Category.의류,
+            Category.휴대폰
+        )
+        repeat(25) {
+            val category = categories.random()
             val form = LostRequest(
-                title = "제목$it",
-                category = Category.가방,
+                title = "$category 제목$it",
+                category = category,
                 location = "위치$it",
                 locationDetail = "상세주소$it",
-                lostAt = "2020-01-01 00:00:00",
+                lostDate = "2023.01.28",
+                lostTime = "22시경",
                 link = "https://okky.kr",
-                image = "이미지$it",
-                description = "설명$it",
-                reward = 100,
+                image = "$category 이미지$it",
+                description = "$category 설명$it",
+                reward = Random.nextInt(200),
                 useBoost = true,
                 useSpeaker = false
             )
-//            lostService.createLost(admin,form)
+            lostService.createLost(admin, form)
         }
     }
 

@@ -1,19 +1,24 @@
 package sparcs.loststar.common
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
 import sparcs.loststar.util.logger
 
+data class ErrorResponse(
+    val errorMessage: String
+)
+
 @ControllerAdvice
-@ResponseStatus(HttpStatus.BAD_REQUEST)
 class GlobalExceptionHandler {
     val log = logger()
 
     @ExceptionHandler(Exception::class)
-    fun handleException(e: Exception): String {
+    fun handleException(e: Exception): ResponseEntity<ErrorResponse> {
         log.warn("{}", e.message)
-        return e.message ?: "error"
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ErrorResponse(e.message ?: "unknown"))
     }
 }

@@ -17,7 +17,7 @@ class LostService(
 
     @Transactional
     fun createLost(user: User, lostRequest: LostRequest): Long {
-        val lost = lostRepository.save(lostRequest.toEntity())
+        val lost = lostRepository.save(lostRequest.toEntity(user))
         user.addLost(lost)
         lost.setBoostEndDateTime()
         return lost.id

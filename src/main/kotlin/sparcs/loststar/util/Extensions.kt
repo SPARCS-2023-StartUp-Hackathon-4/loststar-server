@@ -1,6 +1,7 @@
 package sparcs.loststar.util
 
 import org.springframework.data.domain.Page
+import sparcs.loststar.common.Category
 import sparcs.loststar.common.PageResponse
 import sparcs.loststar.util.DateFormatter.getFormatter
 import java.time.LocalDateTime
