@@ -1,5 +1,6 @@
 package sparcs.loststar.domain.user
 
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -18,5 +19,10 @@ class UserController(
     @PostMapping("/signup")
     fun signUp(@RequestBody signRequest: SignRequest): TokenDto {
         return userService.signup(signRequest)
+    }
+
+    @GetMapping("/nickname")
+    fun nicknameRandom(): String {
+        return userService.nicknameRandom()
     }
 }
