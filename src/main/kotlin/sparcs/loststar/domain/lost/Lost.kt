@@ -2,6 +2,7 @@ package sparcs.loststar.domain.lost
 
 import sparcs.loststar.common.BaseTimeEntity
 import sparcs.loststar.common.Category
+import sparcs.loststar.domain.user.User
 import sparcs.loststar.util.toLocalDateTime
 import sparcs.loststar.util.toMyString
 import javax.persistence.*
@@ -32,6 +33,10 @@ class Lost(
 
     @OneToMany(mappedBy = "lost", cascade = [CascadeType.ALL], orphanRemoval = true)
     var finderList: MutableList<Finder> = mutableListOf(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var user: User? = null,
 
     ) : BaseTimeEntity() {
     fun setBoostEndDateTime() {

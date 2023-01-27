@@ -21,8 +21,7 @@ class User(
     var speakerItem: Int = 0,
     var fcmToken: String,
 
-    @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var lostList: MutableList<Lost> = mutableListOf(),
 
     ) {

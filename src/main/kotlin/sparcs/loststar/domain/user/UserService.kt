@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import sparcs.loststar.config.jwt.JwtProvider
 import sparcs.loststar.config.jwt.TokenDto
+import sparcs.loststar.config.security.SecurityUtils
 import java.util.*
 
 @Service
@@ -54,9 +55,9 @@ class UserService(
     }
 
     fun signUp(signRequest: SignRequest): TokenDto {
-        val nicknameRandom = nicknameRandom()
+        val nicknameRandom = getRandomNickname()
         when {
-            !duplicateNickname(nicknameRandom) -> {
+            !isDuplicateNickname(nicknameRandom) -> {
                 val user = User(
                     email = signRequest.email,
                     password = passwordEncoder.encode(signRequest.email + "1234"),
@@ -73,7 +74,7 @@ class UserService(
         }
     }
 
-    fun nicknameRandom(): String {
+    fun getRandomNickname(): String {
         val url = "https://nickname.hwanmoo.kr/?format=json&count=1&max_length=6"
         val headers = HttpHeaders()
         headers.accept = listOf(MediaType.APPLICATION_JSON)
@@ -88,9 +89,14 @@ class UserService(
         return stringObjectMap!!["words"].toString().replace("\\[".toRegex(), "").replace("]".toRegex(), "")
     }
 
-    fun duplicateNickname(nickname: String): Boolean {
+    fun isDuplicateNickname(nickname: String): Boolean {
         // 있으면 true, 없으면 false
         return userRepository.existsByNickname(nickname)
     }
 
+    fun getLoginUser(): User = userRepository
+        .findByEmail(SecurityUtils.currentAccountEmail).orElseThrow()
+
+    fun getUser(email: String): User = userRepository
+        .findByEmail(email).orElseThrow()
 }
