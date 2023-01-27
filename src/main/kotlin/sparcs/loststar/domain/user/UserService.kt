@@ -9,7 +9,6 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import sparcs.loststar.config.jwt.JwtProvider
 import sparcs.loststar.config.jwt.TokenDto
-import sparcs.loststar.config.security.SecurityUtils
 import java.util.*
 
 @Service
@@ -20,16 +19,44 @@ class UserService(
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    fun kakaoLogin(kakaoLoginRequest: KakaoLoginRequest) : TokenDto {
+        val kakaoDI = getKakaoDI(kakaoLoginRequest.accessToken)
+        val user = userRepository.findByEmail(kakaoDI)
+        if (user.isPresent) {
+            val tokenDto = login(user.get().toUserDto().toLoginRequest())
+            return tokenDto
+        } else {
+            return signUp(signRequest = SignRequest(kakaoDI, kakaoLoginRequest.address, kakaoLoginRequest.profile))
+        }
+    }
+
+    fun getKakaoDI(accessToken: String): String {
+        val url = "https://kapi.kakao.com/v2/user/me"
+        val headers = setHeaders(accessToken)
+        val request = HttpEntity<MultiValueMap<String, String>>(headers!!)
+        val response = RestTemplate().exchange(url, HttpMethod.GET, request, object : ParameterizedTypeReference<Map<String, Object>>() {})
+        val kakaoId: Map<String, Any>? = response.body
+        return kakaoId!!["id"].toString()
+    }
+
+    fun setHeaders(accessToken : String) : HttpHeaders{
+        val headers = HttpHeaders()
+        headers["Authorization"] = "Bearer $accessToken"
+        headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        return headers
+    }
+
     fun login(loginRequest: LoginRequest): TokenDto {
-        val loginToken = loginRequest.toAuthenticationToken()
-        val authenticate = authenticationManagerBuilder.getObject().authenticate(loginToken)
+        val loginRequest = loginRequest.toAuthenticationToken()
+        val authenticate = authenticationManagerBuilder.getObject().authenticate(loginRequest)
         return jwtProvider.generateToken(authenticate)
     }
 
-    fun signup(signRequest: SignRequest): TokenDto {
-        val nicknameRandom = getRandomNickname()
+    fun signUp(signRequest: SignRequest): TokenDto {
+        val nicknameRandom = nicknameRandom()
         when {
-            !isDuplicateNickname(nicknameRandom) -> {
+            !duplicateNickname(nicknameRandom) -> {
                 val user = User(
                     email = signRequest.email,
                     password = passwordEncoder.encode(signRequest.email + "1234"),
@@ -46,7 +73,7 @@ class UserService(
         }
     }
 
-    fun getRandomNickname(): String {
+    fun nicknameRandom(): String {
         val url = "https://nickname.hwanmoo.kr/?format=json&count=1&max_length=6"
         val headers = HttpHeaders()
         headers.accept = listOf(MediaType.APPLICATION_JSON)
@@ -61,10 +88,9 @@ class UserService(
         return stringObjectMap!!["words"].toString().replace("\\[".toRegex(), "").replace("]".toRegex(), "")
     }
 
-    fun isDuplicateNickname(nickname: String) = userRepository.existsByNickname(nickname)
-
-    fun getLoginUser(): User = userRepository
-        .findByEmail(SecurityUtils.currentAccountEmail).orElseThrow()
-
+    fun duplicateNickname(nickname: String): Boolean {
+        // 있으면 true, 없으면 false
+        return userRepository.existsByNickname(nickname)
+    }
 
 }

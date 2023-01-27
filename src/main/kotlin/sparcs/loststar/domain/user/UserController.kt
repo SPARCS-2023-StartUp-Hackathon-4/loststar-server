@@ -18,11 +18,16 @@ class UserController(
 
     @PostMapping("/signup")
     fun signUp(@RequestBody signRequest: SignRequest): TokenDto {
-        return userService.signup(signRequest)
+        return userService.signUp(signRequest)
     }
 
     @GetMapping("/nickname")
     fun nicknameRandom(): String {
         return userService.getRandomNickname()
+    }
+
+    @PostMapping("/kakao")
+    fun kakaoLogin(@RequestBody kakaoLoginRequest: KakaoLoginRequest): TokenDto {
+        return userService.kakaoLogin(kakaoLoginRequest)
     }
 }
