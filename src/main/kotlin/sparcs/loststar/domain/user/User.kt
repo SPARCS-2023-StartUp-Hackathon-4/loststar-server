@@ -1,25 +1,23 @@
 package sparcs.loststar.domain.user
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
-    val email: String,
-    val password: String,
-    val nickname: String,
-    val address: String,
-    val role: Role = Role.USER,
-    val anchorStar : Int = 0,
-    val starPiece : Int = 0,
-    val boostItem : Int = 0,
-    val speakerItem : Int = 0,
-    val fcmToken : String
+    @Column(name = "user_id")
+    var id: Long = 0L,
+    var email: String,
+    var password: String,
+    var nickname: String,
+    var address: String,
+    var role: Role = Role.USER,
+    var anchorStar : Int = 0,
+    var starPiece : Int = 0,
+    var boostItem : Int = 0,
+    var speakerItem : Int = 0,
+    var fcmToken : String
 ) {
 
     enum class Role {
