@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate
 import sparcs.loststar.config.jwt.JwtProvider
 import sparcs.loststar.config.jwt.TokenDto
 import sparcs.loststar.config.security.SecurityUtils
+import sparcs.loststar.config.security.SecurityUtils.currentAccountEmail
 import java.util.*
 
 @Service
@@ -25,6 +26,7 @@ class UserService(
         val user = userRepository.findByEmail(kakaoDI)
         if (user.isPresent) {
             val tokenDto = login(user.get().toUserDto().toLoginRequest())
+            user.get().fcmToken = kakaoLoginRequest.fcmToken
             return tokenDto
         } else {
             return signUp(signRequest = SignRequest(kakaoDI, kakaoLoginRequest.address, kakaoLoginRequest.profile))
@@ -99,4 +101,28 @@ class UserService(
 
     fun getUser(email: String): User = userRepository
         .findByEmail(email).orElseThrow()
+    fun getMyInfo(): UserDto {
+        return userRepository.findByEmail(currentAccountEmail).get().toUserDto()
+    }
+
+    fun getUserInfo(userId: Long): UserDto {
+        return userRepository.findById(userId).get().toUserDto()
+    }
+
+    fun updateProfile(userDto: ProfileRequest): UserDto {
+        val user = userRepository.findByEmail(currentAccountEmail).get()
+        user.address = userDto.address
+        user.profile = userDto.profile
+
+        val saveUser = userRepository.save(user)
+        return saveUser.toUserDto()
+    }
+
+    fun updateAddress(address: String) : UserDto{
+        val user = userRepository.findByEmail(currentAccountEmail).get()
+        user.address = address
+        val saveUser = userRepository.save(user)
+        return saveUser.toUserDto()
+    }
+
 }
