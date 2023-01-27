@@ -1,10 +1,13 @@
 package sparcs.loststar.common
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import sparcs.loststar.util.logger
 
 @ControllerAdvice
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 class GlobalExceptionHandler {
     val log = logger()
 

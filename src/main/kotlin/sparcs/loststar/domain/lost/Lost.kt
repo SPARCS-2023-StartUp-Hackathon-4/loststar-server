@@ -11,7 +11,7 @@ class Lost(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lost_id")
     var id: Long = 0L,
-    var name: String,
+    var title: String,
 
     @Enumerated(EnumType.STRING)
     var category: Category,
@@ -26,14 +26,41 @@ class Lost(
 
     var reward: Int, // 별조각 보상
     var boost: Boolean, // 궤도 진입 추진기 사용 여부
-    var boostEndDateTime: String = "" // 궤도 진입 추진기 종료 일시
+    var boostEndDateTime: String = "", // 궤도 진입 추진기 종료 일시
 
-) : BaseTimeEntity() {
+    var resolve: Boolean = false, // 분실물 해결 여부
+
+    @OneToMany(mappedBy = "lost", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var finderList: MutableList<Finder> = mutableListOf(),
+
+    ) : BaseTimeEntity() {
     fun setBoostEndDateTime() {
         if (boost) {
             boostEndDateTime = createdAt.toLocalDateTime()
                 .plusDays(7).toMyString()
         }
+    }
+
+    fun update(lostRequest: LostRequest) {
+        title = lostRequest.title
+        category = lostRequest.category
+        location = lostRequest.location
+        locationDetail = lostRequest.locationDetail
+        lostAt = lostRequest.lostAt
+        link = lostRequest.link
+        image = lostRequest.image
+        description = lostRequest.description
+        reward = lostRequest.reward
+        boost = lostRequest.useBoost
+        setBoostEndDateTime()
+    }
+
+    fun resolve() {
+        resolve = true
+    }
+
+    fun addFinder(finder: Finder) {
+        finderList.add(finder)
     }
 
 }
