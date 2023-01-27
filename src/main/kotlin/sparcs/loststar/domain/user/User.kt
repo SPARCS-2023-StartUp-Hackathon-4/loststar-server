@@ -1,5 +1,6 @@
 package sparcs.loststar.domain.user
 
+import sparcs.loststar.domain.lost.Lost
 import javax.persistence.*
 
 @Entity
@@ -12,14 +13,19 @@ class User(
     var password: String,
     var nickname: String,
     var address: String,
-    var profile : String,
+    var profile: String,
     var role: Role = Role.USER,
-    var anchorStar : Int = 0,
-    var starPiece : Int = 0,
-    var boostItem : Int = 0,
-    var speakerItem : Int = 0,
-    var fcmToken : String
-) {
+    var anchorStar: Int = 0,
+    var starPiece: Int = 0,
+    var boostItem: Int = 0,
+    var speakerItem: Int = 0,
+    var fcmToken: String,
+
+    @OneToMany(mappedBy = "user")
+    @JoinColumn(name = "user_id")
+    var lostList: MutableList<Lost> = mutableListOf(),
+
+    ) {
     fun toUserDto(): UserDto {
         return UserDto(
             id = id,
@@ -33,6 +39,10 @@ class User(
             boostItem = boostItem,
             speakerItem = speakerItem
         )
+    }
+
+    fun addLost(lost: Lost) {
+        lostList.add(lost)
     }
 
     enum class Role {

@@ -23,6 +23,6 @@ class UserController(
 
     @GetMapping("/nickname")
     fun nicknameRandom(): String {
-        return userService.nicknameRandom()
+        return userService.getRandomNickname()
     }
 }
