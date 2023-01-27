@@ -34,3 +34,9 @@ data class SignRequest(
     val address: String,
     val profile: String
 )
+
+data class KakaoLoginRequest(
+    val accessToken: String,
+    val address: String,
+    val profile: String
+)

@@ -19,13 +19,41 @@ class UserService(
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    fun kakaoLogin(kakaoLoginRequest: KakaoLoginRequest) : TokenDto {
+        val kakaoDI = getKakaoDI(kakaoLoginRequest.accessToken)
+        val user = userRepository.findByEmail(kakaoDI)
+        if (user.isPresent) {
+            val tokenDto = login(user.get().toUserDto().toLoginRequest())
+            return tokenDto
+        } else {
+            return signUp(signRequest = SignRequest(kakaoDI, kakaoLoginRequest.address, kakaoLoginRequest.profile))
+        }
+    }
+
+    fun getKakaoDI(accessToken: String): String {
+        val url = "https://kapi.kakao.com/v2/user/me"
+        val headers = setHeaders(accessToken)
+        val request = HttpEntity<MultiValueMap<String, String>>(headers!!)
+        val response = RestTemplate().exchange(url, HttpMethod.GET, request, object : ParameterizedTypeReference<Map<String, Object>>() {})
+        val kakaoId: Map<String, Any>? = response.body
+        return kakaoId!!["id"].toString()
+    }
+
+    fun setHeaders(accessToken : String) : HttpHeaders{
+        val headers = HttpHeaders()
+        headers["Authorization"] = "Bearer $accessToken"
+        headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        return headers
+    }
+
     fun login(loginRequest: LoginRequest): TokenDto {
         val loginRequest = loginRequest.toAuthenticationToken()
         val authenticate = authenticationManagerBuilder.getObject().authenticate(loginRequest)
         return jwtProvider.generateToken(authenticate)
     }
 
-    fun signup(signRequest: SignRequest): TokenDto {
+    fun signUp(signRequest: SignRequest): TokenDto {
         val nicknameRandom = nicknameRandom()
         when {
             !duplicateNickname(nicknameRandom) -> {
