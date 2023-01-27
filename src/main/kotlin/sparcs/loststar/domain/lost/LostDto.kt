@@ -69,7 +69,8 @@ data class LostCardResponse(
     val image: String,
     val title: String,
     val location: String,
-    val lostAt: String,
+    val lostDate: String,
+    val lostTime: String,
     val reward: Int,
 ) {
     constructor(lost: Lost) : this(
@@ -77,7 +78,8 @@ data class LostCardResponse(
         image = lost.image,
         title = lost.title,
         location = lost.location,
-        lostAt = lost.lostDate,
+        lostDate = lost.lostDate,
+        lostTime = lost.lostTime,
         reward = lost.reward
     )
 }

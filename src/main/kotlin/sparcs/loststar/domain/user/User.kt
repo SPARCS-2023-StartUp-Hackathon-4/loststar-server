@@ -1,5 +1,6 @@
 package sparcs.loststar.domain.user
 
+import sparcs.loststar.domain.found.Found
 import sparcs.loststar.domain.lost.Lost
 import javax.persistence.*
 
@@ -24,6 +25,9 @@ class User(
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var lostList: MutableList<Lost> = mutableListOf(),
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var foundList: MutableList<Found> = mutableListOf(),
+
     ) {
     fun toUserDto(): UserDto {
         return UserDto(
@@ -42,6 +46,10 @@ class User(
 
     fun addLost(lost: Lost) {
         lostList.add(lost)
+    }
+
+    fun addFound(found: Found) {
+        foundList.add(found)
     }
 
     enum class Role {
