@@ -8,6 +8,6 @@ class TestController {
 
     @GetMapping("/test")
     fun test(): String {
-        return "test"
+        return "\uD83D\uDCE2"
     }
 }

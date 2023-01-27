@@ -16,6 +16,7 @@ class User(
     var address: String = "",
     var profile: String = "",
     var role: Role = Role.USER,
+    var location: String = "",
     var anchorStar: Int = 0,
     var starPiece: Int = 0,
     var boostItem: Int = 0,

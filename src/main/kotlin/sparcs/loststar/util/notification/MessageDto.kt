@@ -1,4 +1,4 @@
-package sparcs.loststar.util.fcm
+package sparcs.loststar.util.notification
 
 data class MessageDto(
     val targetToken: String,

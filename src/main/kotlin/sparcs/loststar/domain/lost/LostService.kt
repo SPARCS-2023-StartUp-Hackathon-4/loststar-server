@@ -6,19 +6,24 @@ import sparcs.loststar.common.Category
 import sparcs.loststar.common.PageResponse
 import sparcs.loststar.domain.user.User
 import sparcs.loststar.domain.user.UserRepository
+import sparcs.loststar.util.notification.NotificationService
 import sparcs.loststar.util.toPageResponse
 
 @Service
 @Transactional(readOnly = true)
 class LostService(
     private val lostRepository: LostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val notificationService: NotificationService
 ) {
 
     @Transactional
     fun createLost(user: User, lostRequest: LostRequest): Long {
         val lost = lostRepository.save(lostRequest.toEntity(user))
         user.addLost(lost)
+        if (lostRequest.useBoost) {
+            notificationService.notifyAll(lostRequest.location, lostRequest.locationDetail)
+        }
         lost.setBoostEndDateTime()
         return lost.id
     }

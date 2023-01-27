@@ -1,4 +1,4 @@
-package sparcs.loststar.util.fcm
+package sparcs.loststar.util.notification
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.auth.oauth2.GoogleCredentials
@@ -41,13 +41,14 @@ class FcmService(
             .addHeader("Authorization", "Bearer ${getAccessToken()}")
             .build()
         val response = client.newCall(request).execute()
+        if (!response.isSuccessful)
+            log.warn("FCM send failed: ${response.body?.string()}")
 
-        println(response.body!!.string())
     }
 
     private fun makeMessage(targetToken: String, title: String, body: String): String {
         val notification = Notification(title = title, body = body)
-        val message = Message(token = targetToken, notification = notification)
+        val message = Message(token = targetToken, data = notification)
         return objectMapper.writeValueAsString(FcmMessage(message = message))
     }
 }

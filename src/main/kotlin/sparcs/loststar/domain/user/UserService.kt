@@ -9,7 +9,6 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import sparcs.loststar.config.jwt.JwtProvider
 import sparcs.loststar.config.jwt.TokenDto
-import sparcs.loststar.config.security.SecurityUtils
 import sparcs.loststar.config.security.SecurityUtils.currentAccountEmail
 import java.util.*
 
@@ -97,7 +96,7 @@ class UserService(
     }
 
     fun getLoginUser(): User = userRepository
-        .findByEmail(SecurityUtils.currentAccountEmail).orElseThrow()
+        .findByEmail(currentAccountEmail).orElseThrow()
 
     fun getUser(email: String): User = userRepository
         .findByEmail(email).orElseThrow()

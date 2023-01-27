@@ -1,4 +1,4 @@
-package sparcs.loststar.util.fcm
+package sparcs.loststar.util.notification
 
 
 data class FcmMessage(
@@ -7,7 +7,7 @@ data class FcmMessage(
 )
 
 data class Message(
-    val notification: Notification,
+    val data: Notification,
     val token: String
 )
 
