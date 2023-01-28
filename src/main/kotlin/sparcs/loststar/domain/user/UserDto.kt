@@ -18,6 +18,19 @@ data class UserDto (
         return LoginRequest(email, password = email + "1234")
     }
 
+    constructor(user: User) : this(
+        id = user.id,
+        email = user.email,
+        nickname = user.nickname,
+        address = user.address,
+        profile = user.profile,
+        fcmToken = user.fcmToken,
+        anchorStar = user.anchorStar,
+        starPiece = user.starPiece,
+        boostItem = user.boostItem,
+        speakerItem = user.speakerItem
+    )
+
 }
 
 data class LoginRequest(

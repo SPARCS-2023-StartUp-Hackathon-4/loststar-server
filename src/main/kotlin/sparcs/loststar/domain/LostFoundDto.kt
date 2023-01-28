@@ -4,6 +4,7 @@ package sparcs.loststar.domain
 import sparcs.loststar.common.Category
 import sparcs.loststar.common.Location
 import sparcs.loststar.domain.user.User
+import sparcs.loststar.domain.user.UserDto
 
 data class PageParams(
     val type: LostFoundType,
@@ -44,6 +45,7 @@ data class LostFoundRequest(
 
 
 data class LostFoundResponse(
+    val writer: UserDto,
     val title: String,
     val category: Category,
     val location: String,
@@ -54,7 +56,8 @@ data class LostFoundResponse(
     val description: String,
     val useBoost: Boolean,
 ) {
-    constructor(lostFound: LostFound) : this(
+    constructor(lostFound: LostFound, user: User) : this(
+        writer = UserDto(user),
         title = lostFound.title,
         category = lostFound.category,
         location = lostFound.location,
@@ -75,6 +78,7 @@ data class CardResponse(
     val date: String,
     val time: String,
     val boost: Boolean,
+    val reward: Int,
 ) {
     constructor(lostFound: LostFound) : this(
         id = lostFound.id,
@@ -83,7 +87,8 @@ data class CardResponse(
         location = lostFound.location,
         date = lostFound.date,
         time = lostFound.time,
-        boost = lostFound.boost
+        boost = lostFound.boost,
+        reward = lostFound.reward,
     )
 }
 

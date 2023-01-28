@@ -39,9 +39,10 @@ class LostFoundService(
             .toResponse()
     }
 
-    fun get(id: Long) = LostFoundResponse(
-        lostFoundRepository.findById(id).orElseThrow()
-    )
+    fun get(id: Long): LostFoundResponse {
+        val lostFound = lostFoundRepository.findById(id).orElseThrow()
+        return LostFoundResponse(lostFound, lostFound.user!!)
+    }
 
     @Transactional
     fun update(id: Long, lostFoundRequest: LostFoundRequest): IdResponse {
