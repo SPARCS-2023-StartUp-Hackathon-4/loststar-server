@@ -8,8 +8,8 @@ import com.amazonaws.util.IOUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import sparcs.loststar.common.ImageResponse
 import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.util.*
 
 @Service
@@ -23,8 +23,7 @@ class AwsS3Service(
     @Value("\${cloud.aws.s3.dir}")
     lateinit var dir: String
 
-    @Throws(IOException::class)
-    fun upload(file: MultipartFile): String {
+    fun upload(file: MultipartFile): ImageResponse {
         val fileName = UUID.randomUUID().toString() + "-" + file.originalFilename
         val objMeta = ObjectMetadata()
 
@@ -37,6 +36,6 @@ class AwsS3Service(
             PutObjectRequest(bucket, dir + fileName, byteArrayIs, objMeta)
             .withCannedAcl(CannedAccessControlList.PublicRead))
 
-        return amazonS3Client.getUrl(bucket, dir + fileName).toString()
+        return ImageResponse(amazonS3Client.getUrl(bucket, dir + fileName).toString())
     }
 }

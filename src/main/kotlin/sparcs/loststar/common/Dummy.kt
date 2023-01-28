@@ -20,8 +20,8 @@ fun getLostFoundDummyFormList() = mutableListOf(
     LostFoundRequest(
         title = "에어팟 주웠습니다~",
         category = Category.전자기기,
-        location = Location.노원.name,
-        locationDetail = "노원공원 밴치",
+        location = Location.강남.name,
+        locationDetail = "더이스케이프 강남역점",
         date = "2023.01.13",
         time = "14시경",
         image = "https://loststar44.s3.ap-northeast-2.amazonaws.com/imagec394c9c9-bd63-4766-854b-f242f2e7c2fc-airpod1.jpg",
@@ -46,8 +46,8 @@ fun getLostFoundDummyFormList() = mutableListOf(
     LostFoundRequest(
         title = "우리카드 주인 찾아가세용",
         category = Category.카드,
-        location = Location.서대문.name,
-        locationDetail = "서대문역 1번출구",
+        location = Location.강남.name,
+        locationDetail = "강남역 코다차야 술집",
         date = "2023.02.03",
         time = "15시경",
         image = "https://loststar44.s3.ap-northeast-2.amazonaws.com/imagef47965bd-7a13-468a-b75d-50a1f8c84bbd-s_card.jpg",
