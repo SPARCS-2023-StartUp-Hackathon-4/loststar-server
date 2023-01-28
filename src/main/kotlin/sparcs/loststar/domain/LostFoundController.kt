@@ -41,5 +41,8 @@ class LostFoundController(
      * lost only
      */
     @PutMapping("/{id}/resolve")
-    fun resolveFound(@PathVariable id: Long): IdResponse = lostFoundService.resolve(id)
+    fun resolveFound(
+        @PathVariable id: Long,
+        @RequestBody resolveRequest: ResolveRequest
+    ): IdResponse = lostFoundService.resolve(id, resolveRequest)
 }

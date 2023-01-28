@@ -5,6 +5,7 @@ import org.springframework.http.*
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import sparcs.loststar.config.jwt.JwtProvider
@@ -20,6 +21,7 @@ class UserService(
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    @Transactional
     fun kakaoLogin(kakaoLoginRequest: KakaoLoginRequest) : TokenDto {
         val kakaoDI = getKakaoDI(kakaoLoginRequest.accessToken)
         val user = userRepository.findByEmail(kakaoDI)

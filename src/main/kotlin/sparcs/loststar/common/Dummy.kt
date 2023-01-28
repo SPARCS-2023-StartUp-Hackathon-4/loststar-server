@@ -5,7 +5,7 @@ import sparcs.loststar.domain.LostFoundType
 
 fun getLostFoundDummyFormList() = mutableListOf(
     LostFoundRequest(
-        title = "휴대폰을 읽어버렸습니다!",
+        title = "아이폰12",
         category = Category.휴대폰,
         location = Location.강남.name,
         locationDetail = "강남역 7번출구 부근",
@@ -18,7 +18,7 @@ fun getLostFoundDummyFormList() = mutableListOf(
         type = LostFoundType.LOST,
     ),
     LostFoundRequest(
-        title = "에어팟 주웠습니다~",
+        title = "에어팟 3",
         category = Category.전자기기,
         location = Location.강남.name,
         locationDetail = "더이스케이프 강남역점",
@@ -31,7 +31,7 @@ fun getLostFoundDummyFormList() = mutableListOf(
         type = LostFoundType.FOUND,
     ),
     LostFoundRequest(
-        title = "카드지갑 찾아요 ㅠㅠ",
+        title = "파란색 가죽 카드지갑",
         category = Category.지갑,
         location = Location.강남.name,
         locationDetail = "강남역 투썸플레이스",
@@ -44,7 +44,7 @@ fun getLostFoundDummyFormList() = mutableListOf(
         type = LostFoundType.LOST,
     ),
     LostFoundRequest(
-        title = "우리카드 주인 찾아가세용",
+        title = "우리카드",
         category = Category.카드,
         location = Location.강남.name,
         locationDetail = "강남역 코다차야 술집",

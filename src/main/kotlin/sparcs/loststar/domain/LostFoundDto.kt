@@ -55,6 +55,7 @@ data class LostFoundResponse(
     val image: String,
     val description: String,
     val useBoost: Boolean,
+    val reward: Int,
 ) {
     constructor(lostFound: LostFound, user: User) : this(
         writer = UserDto(user),
@@ -67,6 +68,7 @@ data class LostFoundResponse(
         image = lostFound.image,
         description = lostFound.description,
         useBoost = lostFound.boost,
+        reward = lostFound.reward,
     )
 }
 
@@ -94,4 +96,9 @@ data class CardResponse(
 
 data class ListResponse(
     val list: List<CardResponse>
+)
+
+data class ResolveRequest(
+    val userId: Long,
+    val reward: Int
 )

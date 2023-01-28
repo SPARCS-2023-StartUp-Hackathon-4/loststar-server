@@ -5,3 +5,7 @@ data class MessageDto(
     val title: String,
     val body: String
 )
+
+data class UseSpeakerRequest(
+    val id: Long
+)

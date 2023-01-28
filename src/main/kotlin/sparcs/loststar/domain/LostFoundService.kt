@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sparcs.loststar.common.IdResponse
 import sparcs.loststar.common.PageResponse
+import sparcs.loststar.domain.store.LogMoney
 import sparcs.loststar.domain.user.User
+import sparcs.loststar.domain.user.UserRepository
 import sparcs.loststar.util.notification.NotificationService
 import sparcs.loststar.util.toPageResponse
 import sparcs.loststar.util.toResponse
@@ -13,16 +15,14 @@ import sparcs.loststar.util.toResponse
 @Transactional(readOnly = true)
 class LostFoundService(
     private val lostFoundRepository: LostFoundRepository,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val userRepository: UserRepository
 ) {
 
     @Transactional
     fun create(user: User, lostFoundRequest: LostFoundRequest): IdResponse {
         val lostFound = lostFoundRepository.save(lostFoundRequest.toEntity(user))
         user.addLostFound(lostFound)
-        if (lostFoundRequest.boost) {
-            notificationService.notifyAll(lostFoundRequest.location, lostFoundRequest.locationDetail)
-        }
         lostFound.setBoostEndDateTime()
         return lostFound.id.toResponse()
     }
@@ -44,6 +44,10 @@ class LostFoundService(
         return LostFoundResponse(lostFound, lostFound.user!!)
     }
 
+    fun getEntity(id: Long): LostFound {
+        return lostFoundRepository.findById(id).orElseThrow()
+    }
+
     @Transactional
     fun update(id: Long, lostFoundRequest: LostFoundRequest): IdResponse {
         val lost = lostFoundRepository.findById(id).orElseThrow()
@@ -60,10 +64,13 @@ class LostFoundService(
     /**
      * lost only
      */
+    @LogMoney
     @Transactional
-    fun resolve(id: Long): IdResponse {
+    fun resolve(id: Long, resolveRequest: ResolveRequest): IdResponse {
         val lost = lostFoundRepository.findByType(id, LostFoundType.LOST).orElseThrow()
+        val finder = userRepository.findById(resolveRequest.userId).orElseThrow()
         lost.resolve()
+        finder.starPiece += resolveRequest.reward
         return id.toResponse()
     }
 }

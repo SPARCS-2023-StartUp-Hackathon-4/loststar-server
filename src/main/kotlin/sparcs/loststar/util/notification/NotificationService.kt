@@ -11,13 +11,14 @@ class NotificationService(
     private val userRepository: UserRepository
 ) {
     @Async
-    fun notifyAll(location: String, locationDetail: String) {
+    fun notifyAll(location: String, locationDetail: String, productName: String) {
         userRepository.findAll()
             .filter { it.location.contains(location) }
+            .filter { it.fcmToken.length > 1 }
             .forEach { fcmService.sendDirectTo(
                 it.fcmToken,
                 "\uD83D\uDCE2 서울시 ${location}구민 주목!",
-                "")
+                "${locationDetail}에서 잃어버린 ${productName}을 찾습니다!")
             }
     }
 
