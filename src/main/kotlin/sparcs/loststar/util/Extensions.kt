@@ -7,6 +7,7 @@ import sparcs.loststar.common.IdResponse
 import sparcs.loststar.common.PageResponse
 import sparcs.loststar.domain.CardResponse
 import sparcs.loststar.domain.ListResponse
+import sparcs.loststar.domain.store.ExchangeRate
 import sparcs.loststar.util.DateFormatter.getFormatter
 import java.time.LocalDateTime
 
@@ -22,3 +23,11 @@ fun <T> Page<T>.toPageResponse(): PageResponse<T> = PageResponse(this)
 
 fun Long.toResponse(): IdResponse = IdResponse(this)
 fun List<CardResponse>.toResponse(): ListResponse = ListResponse(this)
+
+fun Int.getStarPieceRatio(): Int {
+    return when (this) {
+        1 -> ExchangeRate.ONE.starPiece()
+        3 -> ExchangeRate.THREE.starPiece()
+        else -> ExchangeRate.FIVE.starPiece()
+    }
+}

@@ -50,8 +50,8 @@ class UserService(
     }
 
     fun login(loginRequest: LoginRequest): TokenDto {
-        val loginRequest = loginRequest.toAuthenticationToken()
-        val authenticate = authenticationManagerBuilder.getObject().authenticate(loginRequest)
+        val authenticate = authenticationManagerBuilder.getObject()
+            .authenticate(loginRequest.toAuthenticationToken())
         return jwtProvider.generateToken(authenticate)
     }
 

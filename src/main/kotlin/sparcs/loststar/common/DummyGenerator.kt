@@ -1,5 +1,6 @@
 package sparcs.loststar.common
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import sparcs.loststar.domain.LostFoundRequest
@@ -15,13 +16,15 @@ import kotlin.random.Random
 class DummyGenerator(
     private val lostFoundService: LostFoundService,
     private val userRepository: UserRepository,
+    private val passwordEncoder: BCryptPasswordEncoder
 ) {
 
     @PostConstruct
     fun init() {
         val admin = userRepository.save(User(
             email = "admin",
-            password = "1234"
+            password = passwordEncoder.encode("1234"),
+            starPiece = 1000
         ))
         val categories = mutableListOf(
             Category.가방,

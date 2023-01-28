@@ -1,5 +1,9 @@
 package sparcs.loststar.domain.user
 
+import sparcs.loststar.common.GlobalConstants.BOOST_ANCHOR_PRICE
+import sparcs.loststar.common.GlobalConstants.LACK_ANCHOR_MESSAGE
+import sparcs.loststar.common.GlobalConstants.LACK_STAR_PIECE_MESSAGE
+import sparcs.loststar.common.GlobalConstants.SPEAKER_ANCHOR_PRICE
 import sparcs.loststar.domain.LostFound
 import javax.persistence.*
 
@@ -42,6 +46,30 @@ class User(
 
     fun addLostFound(lostFound: LostFound) {
         lostFoundList.add(lostFound)
+    }
+
+    fun exchange(starPiece: Int, anchorStar: Int) {
+        if (this.starPiece < starPiece) {
+            throw IllegalArgumentException(LACK_STAR_PIECE_MESSAGE)
+        }
+        this.starPiece -= starPiece
+        this.anchorStar += anchorStar
+    }
+
+    fun buyBoost() {
+        if (this.anchorStar < BOOST_ANCHOR_PRICE) {
+            throw IllegalArgumentException(LACK_ANCHOR_MESSAGE)
+        }
+        this.anchorStar -= BOOST_ANCHOR_PRICE
+        this.boostItem += 1
+    }
+
+    fun buySpeaker() {
+        if (this.anchorStar < SPEAKER_ANCHOR_PRICE) {
+            throw IllegalArgumentException(LACK_ANCHOR_MESSAGE)
+        }
+        this.anchorStar -= SPEAKER_ANCHOR_PRICE
+        this.speakerItem += 1
     }
 
     enum class Role {
