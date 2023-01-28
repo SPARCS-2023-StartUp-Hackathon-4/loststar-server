@@ -1,7 +1,6 @@
 package sparcs.loststar.domain.user
 
-import sparcs.loststar.domain.found.Found
-import sparcs.loststar.domain.lost.Lost
+import sparcs.loststar.domain.LostFound
 import javax.persistence.*
 
 @Entity
@@ -15,6 +14,7 @@ class User(
     var nickname: String = "",
     var address: String = "",
     var profile: String = "",
+    @Enumerated(EnumType.STRING)
     var role: Role = Role.USER,
     var location: String = "",
     var anchorStar: Int = 0,
@@ -22,14 +22,9 @@ class User(
     var boostItem: Int = 0,
     var speakerItem: Int = 0,
     var fcmToken: String = "",
-
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var lostList: MutableList<Lost> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var foundList: MutableList<Found> = mutableListOf(),
-
-    ) {
+    var lostFoundList: MutableList<LostFound> = mutableListOf()
+) {
     fun toUserDto(): UserDto {
         return UserDto(
             id = id,
@@ -45,17 +40,11 @@ class User(
         )
     }
 
-    fun addLost(lost: Lost) {
-        lostList.add(lost)
-    }
-
-    fun addFound(found: Found) {
-        foundList.add(found)
+    fun addLostFound(lostFound: LostFound) {
+        lostFoundList.add(lostFound)
     }
 
     enum class Role {
         USER, ADMIN
     }
-
-
 }

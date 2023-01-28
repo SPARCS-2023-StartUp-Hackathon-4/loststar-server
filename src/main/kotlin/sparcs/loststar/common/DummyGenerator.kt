@@ -2,19 +2,18 @@ package sparcs.loststar.common
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import sparcs.loststar.domain.lost.LostRequest
-import sparcs.loststar.domain.lost.LostService
+import sparcs.loststar.domain.LostFoundRequest
+import sparcs.loststar.domain.LostFoundService
+import sparcs.loststar.domain.LostFoundType
 import sparcs.loststar.domain.user.User
 import sparcs.loststar.domain.user.UserRepository
-import sparcs.loststar.domain.user.UserService
 import javax.annotation.PostConstruct
 import kotlin.random.Random
 
 @Component
 @Transactional
 class DummyGenerator(
-    private val lostService: LostService,
-    private val userService: UserService,
+    private val lostFoundService: LostFoundService,
     private val userRepository: UserRepository,
 ) {
 
@@ -29,23 +28,31 @@ class DummyGenerator(
             Category.의류,
             Category.휴대폰
         )
+        val types = mutableListOf(
+            LostFoundType.LOST,
+            LostFoundType.FOUND
+        )
+        val locations = mutableListOf(
+            Location.강남,
+            Location.강북,
+            Location.강동
+        )
         repeat(25) {
             val category = categories.random()
-            val form = LostRequest(
+            val form = LostFoundRequest(
                 title = "$category 제목$it",
                 category = category,
-                location = "위치$it",
+                location = locations.random().name,
                 locationDetail = "상세주소$it",
-                lostDate = "2023.01.28",
-                lostTime = "22시경",
-                link = "https://okky.kr",
+                date = "2023.01.28",
+                time = "22시경",
                 image = "$category 이미지$it",
                 description = "$category 설명$it",
                 reward = Random.nextInt(200),
-                useBoost = true,
-                useSpeaker = false
+                boost = true,
+                type = types.random(),
             )
-            lostService.createLost(admin, form)
+            lostFoundService.create(admin, form)
         }
     }
 

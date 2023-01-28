@@ -7,7 +7,7 @@ object SecurityUtils {
         get() {
             val authentication = SecurityContextHolder.getContext().authentication
             if (authentication == null || authentication.name == null) {
-                throw RuntimeException()
+                throw RuntimeException("로그인 되어있지 않습니다.")
             }
             return authentication.name
         }
